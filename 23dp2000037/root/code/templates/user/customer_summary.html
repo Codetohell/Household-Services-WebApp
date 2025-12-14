@@ -1,0 +1,74 @@
+{% extends "user/customer_layout.html" %}
+
+{% block content %}
+<div class="container-fluid mb-5">
+    <div class="row">
+        <!-- Right Column: Service History -->
+        <div class="card shadow-sm border-0" style="border-radius: 10px; background-color: #532d3688;">
+            <div class="card-body" style="min-height: 100px;"> <!-- Reduced height -->
+                <h5 class="card-title" style="color: #461a29; font-weight: bold;">Service History</h5>
+                <div class="d-flex justify-content-center">
+                    <canvas id="serviceHistoryChart" width="200" height="80"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js and Custom Script -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Pass dynamic data from the backend using template variables
+    var serviceHistoryData = {{ service_history_data | tojson | safe }};
+
+    // Bar chart for Service History
+    var ctxHistory = document.getElementById('serviceHistoryChart').getContext('2d');
+    var serviceHistoryChart = new Chart(ctxHistory, {
+        type: 'bar',
+        data: {
+            labels: ['Requested', 'Closed', 'Assigned'],
+            datasets: [{
+                label: 'Service History',
+                data: [
+                    serviceHistoryData['Requested'] || 0,
+                    serviceHistoryData['Closed'] || 0,
+                    serviceHistoryData['Assigned'] || 0
+                ],
+                backgroundColor: ['#1a1a1a', '#565656', '#6a6a6a'],
+
+ 
+                borderColor: '#ffffff',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: '#1a1a1a' // Dar
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: '#1a1a1a' // Da
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function (tooltipItem) {
+                            return tooltipItem.label + ': ' + tooltipItem.raw;
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
