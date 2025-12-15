@@ -15,8 +15,8 @@ app = Flask(__name__, instance_relative_config=True)
 app.secret_key = secrets.token_hex(16)
 
 # setting database URI
-app.config['SQLALCHEMY_DATABASE_URI'] = r"sqlite:///D:\ks\test_new\second_imp\MAD1-Project-main\instance\household_services.db"  # Absolute path for SQLite
-
+#app.config['SQLALCHEMY_DATABASE_URI'] = r"sqlite:///D:\ks\test_new\second_imp\MAD1-Project-main\instance\household_services.db"  # Absolute path for SQLite
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('POSTGRES_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize the database
