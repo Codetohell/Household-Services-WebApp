@@ -9,7 +9,8 @@ import sqlite3
 from sqlalchemy.sql import text
 from datetime import datetime
 from sqlalchemy import func, text
-from app import db
+#from app import db
+import os
 
 app = Flask(__name__, instance_relative_config=True)
 app.secret_key = secrets.token_hex(16)
