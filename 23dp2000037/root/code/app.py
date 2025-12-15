@@ -24,8 +24,8 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 # Create the tables
-with app.app_context():
-    db.create_all()
+#with app.app_context():
+#    db.create_all()
 
 #BEGINNING OF ROUTES
 @app.route("/")
