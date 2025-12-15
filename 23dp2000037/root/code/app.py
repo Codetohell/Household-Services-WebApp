@@ -181,6 +181,28 @@ def service_professional_login():
     return render_template('user/login.html')
 
 # ADMIN ROUTES
+@app.route('/create-admin')
+def create_admin():
+    """One-time route to create admin account"""
+    try:
+        # Check if admin already exists
+        existing_admin = Admin.query.filter_by(email='admin@household.com').first()
+        if existing_admin:
+            return "Admin already exists!", 400
+        
+        # Create new admin
+        new_admin = Admin(
+            email='admin@household.com',
+            password='admin123'  # Change this after first login!
+        )
+        db.session.add(new_admin)
+        db.session.commit()
+        
+        return "✅ Admin created!<br>Email: admin@household.com<br>Password: admin123", 200
+    except Exception as e:
+        return f"❌ Error: {str(e)}", 500
+
+
 @app.route('/user/admin_profile', methods=['GET'])
 def admin_profile():
     return render_template('/user/admin_profile.html')
