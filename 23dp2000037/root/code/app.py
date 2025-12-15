@@ -18,6 +18,14 @@ app.secret_key = secrets.token_hex(16)
 # setting database URI
 #app.config['SQLALCHEMY_DATABASE_URI'] = r"sqlite:///D:\ks\test_new\second_imp\MAD1-Project-main\instance\household_services.db"  # Absolute path for SQLite
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('POSTGRES_URL')
+postgres_url = os.environ.get('POSTGRES_URL')
+if postgres_url:
+    # Production: Use Postgres
+    app.config['SQLALCHEMY_DATABASE_URI'] = postgres_url
+else:
+    # Local development: Use SQLite
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///household_services.db'
+    
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize the database
@@ -27,6 +35,15 @@ migrate = Migrate(app, db)
 # Create the tables
 #with app.app_context():
 #    db.create_all()
+@app.route('/init-db')
+def init_database():
+    """Visit once to create all database tables in production"""
+    try:
+        with app.app_context():
+            db.create_all()
+        return "✅ Database tables created successfully!", 200
+    except Exception as e:
+        return f"❌ Error: {str(e)}", 500
 
 #BEGINNING OF ROUTES
 @app.route("/")
